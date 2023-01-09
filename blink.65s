@@ -1,0 +1,17 @@
+ .ORG $8000
+reset:
+ LDA #$ff
+ STA $6002
+ 
+ LDA #$50
+ STA $6000
+ 
+loop:
+ ROR 
+ STA $6000 
+ JMP loop
+ 
+ .ORG $fffc
+ .WORD reset
+ .WORD $0000
+ 
