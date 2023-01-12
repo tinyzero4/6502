@@ -95,9 +95,6 @@ print:
   jsr print_char
   inx
   jmp print  
-
-loop:
-  jmp loop
   
 number: .word 1729
 
