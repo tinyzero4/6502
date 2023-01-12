@@ -33,13 +33,11 @@ reset:
   lda #%00000001 ; Clear display
   JSR lcd_instruction
   
-  LDA #0
+  lda #0
   sta counter
   sta counter + 1
   
 loop: 
- lda #%00000001 ; Clear display
- jsr lcd_instruction
  lda #%00000010
  jsr lcd_instruction
  
