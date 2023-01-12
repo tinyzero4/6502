@@ -8,7 +8,11 @@ RW = %01000000
 RS = %00100000
 
   .org $8000
+
 reset:
+  ldx #$ff
+  txs
+
   lda #%11111111 ; Set all pins on port B to output
   sta DDRB
   lda #%11100000 ; Set top 3 pins on port A to output
@@ -19,8 +23,8 @@ reset:
   lda #%00001110 ; Display on; cursor on; blink off
   jsr lcd_instruction
   lda #%00000110 ; Increment and shift cursor; don't shift display
-  JSR lcd_instruction
-  LDA #%00000001 ; Clear display
+  jsr lcd_instruction
+  lda #$00000001 ; Clear display
   jsr lcd_instruction
 
   ldx #0
@@ -30,25 +34,25 @@ print:
   jsr print_char
   inx
   jmp print
-  
-message: .asciiz "Hello, world!    Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!"
 
 loop:
-  JMP loop
-  
+  jmp loop
+
+message: .asciiz "Hello, world!!!$$"
+
 lcd_wait:
-  pha  
+  pha
   lda #%00000000  ; Port B is input
   sta DDRB
-lcd_wait_inner:
+lcdbusy:
   lda #RW
   sta PORTA
   lda #(RW | E)
   sta PORTA
   lda PORTB
   and #%10000000
-  bne lcd_wait_inner
-  
+  bne lcdbusy
+
   lda #RW
   sta PORTA
   lda #%11111111  ; Port B is output
@@ -77,7 +81,7 @@ print_char:
   lda #RS         ; Clear E bits
   sta PORTA
   rts
-  
+
   .org $fffc
   .word reset
   .word $0000
