@@ -16,7 +16,7 @@ RS = %00100000
 
 reset:
   ldx #$ff
-  TXS
+  txs
   cli
 
   lda #%11111111 ; Set all pins on port B to output
@@ -38,18 +38,22 @@ reset:
   sta counter + 1
   
 loop: 
- lda #%00000010
- jsr lcd_instruction
+  lda #%00000010
+  JSR lcd_instruction
+  
+  LDA #0
+  sta counter
+  sta counter + 1
  
- lda #0
- sta message
+  lda #0
+  sta message
  
- sei
- lda counter
- sta value
- lda counter + 1
- sta value + 1
- cli
+  sei
+  lda counter
+  sta value
+  lda counter + 1
+  sta value + 1
+  cli
 
 divide:
   lda #0
@@ -96,8 +100,6 @@ print:
   jsr print_char
   inx
   jmp print  
-  
-number: .word 1729
 
 push_char:
  PHA
@@ -162,6 +164,7 @@ print_char:
 
 nmi:
   rti
+
 irq:
   INC counter
   BNE exit_irq
