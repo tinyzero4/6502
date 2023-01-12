@@ -167,7 +167,7 @@ irq:
   BNE exit_irq
   inc counter + 1
 exit_irq:
-rti
+  rti
 
   .ORG $fffa
   .word nmi
