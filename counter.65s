@@ -30,8 +30,8 @@ reset:
   jsr lcd_instruction
   lda #%00000110 ; Increment and shift cursor; don't shift display
   jsr lcd_instruction
-  lda #%00000001 ; Clear display
-  JSR lcd_instruction
+  lda #%00000001
+  jsr lcd_instruction
   
   lda #0
   sta counter
@@ -39,11 +39,7 @@ reset:
   
 loop: 
   lda #%00000010
-  JSR lcd_instruction
-  
-  LDA #0
-  sta counter
-  sta counter + 1
+  jsr lcd_instruction
  
   lda #0
   sta message
@@ -163,8 +159,6 @@ print_char:
   rts
 
 nmi:
-  rti
-
 irq:
   INC counter
   BNE exit_irq
@@ -172,7 +166,7 @@ irq:
 exit_irq:
   rti
 
-  .ORG $fffa
+  .org $fffa
   .word nmi
   .word reset
   .word irq
