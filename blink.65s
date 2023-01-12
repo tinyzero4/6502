@@ -31,7 +31,7 @@ print:
   inx
   jmp print
   
-message: .asciiz "Hello, world!    Go on!!"
+message: .asciiz "Hello, world!    Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!Go on!!"
 
 loop:
   JMP loop
