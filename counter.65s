@@ -6,6 +6,7 @@ DDRA = $6003
 value = $0200
 mod10 = $0202
 message = $0204
+counter = $020a
 
 E  = %10000000
 RW = %01000000
@@ -29,22 +30,33 @@ reset:
   lda #%00000110 ; Increment and shift cursor; don't shift display
   jsr lcd_instruction
   lda #$00000001 ; Clear display
-  jsr lcd_instruction
+  JSR lcd_instruction
   
- LDA #0
- STA message
- LDA number
- STA value
- LDA number + 1
+  LDA #0
+  sta counter
+  sta counter + 1
+  
+loop: 
+ lda #$00000010
+ jsr lcd_instruction
+ 
+ lda #0
+ sta message
+ 
+ sei
+ lda counter
+ sta value
+ lda counter + 1
  sta value + 1
+ cli
 
 divide:
   lda #0
   sta mod10
-  STA mod10 + 1
+  sta mod10 + 1
   clc
 
-  LDX #16
+  ldx #16
 divloop:
   rol value
   rol value + 1
@@ -150,6 +162,16 @@ print_char:
   sta PORTA
   rts
 
-  .org $fffc
+nmi:
+  rti
+irq:
+  INC counter
+  BNE exit_irq
+  inc counter + 1
+exit_irq:
+rti
+
+  .ORG $fffa
+  .word nmi
   .word reset
-  .word $0000
+  .word irq
