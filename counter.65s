@@ -38,6 +38,8 @@ reset:
   sta counter + 1
   
 loop: 
+ lda #%00000001 ; Clear display
+ jsr lcd_instruction
  lda #%00000010
  jsr lcd_instruction
  
